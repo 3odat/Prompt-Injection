@@ -1,36 +1,47 @@
-# 🛡️ PromptInjectionDefense: Dual-Layer Guardrails for Securing LLMs from Prompt Injection Attacks
+# 🛡️ Prompt Injection Defense Framework for LLMs  
+> An advanced dual-layer safeguard system using AI classifiers + fine-tuned LLMs to stop prompt injection attacks in real time.
 
-![MIT License](https://img.shields.io/badge/license-MIT-green)
-![Python](https://img.shields.io/badge/python-3.10%2B-blue)
-![Status](https://img.shields.io/badge/status-in--progress-yellow)
-
-## ⚠️ Problem: Prompt Injection in LLMs
-
-Prompt injection is an emerging class of adversarial attacks on Large Language Models (LLMs) where an attacker manipulates prompts to override system instructions, jailbreak guardrails, or generate harmful outputs.
-
-This repository presents a **novel and production-grade dual-layer defense** architecture that:
-1. 🧠 Detects malicious prompts **before they reach the model** using a smart **auxiliary classifier**.
-2. 🔐 Defends against bypass attempts with a **LoRA-fine-tuned LLM** trained on adversarial data.
+![Prompt Injection Defense Banner](https://yourdomain.com/assets/banner.png)
 
 ---
 
-## 🎯 Project Goals
+## 🚀 Overview
 
-- 🔎 **Detect and classify** malicious or jailbreak-style prompts in real-time.
-- 🧬 **Fine-tune LLMs using LoRA** to resist prompt injections even during inference.
-- 🧠 **Adapt and self-heal** from emerging threats using a feedback-driven training pipeline.
-- ⚙️ **Deployable API-first service** ready for local or cloud inference.
+**Prompt Injection Attacks** are one of the most severe vulnerabilities in modern LLM-based applications. This repository presents a **novel, research-backed dual-layer architecture**:
+
+- ✅ **Layer 1: Prompt Classifier** – A transformer-based model (e.g., DistilBERT or RoBERTa) pre-screens user input for injection attempts  
+- ✅ **Layer 2: Hardened LLM** – A fine-tuned instruction-following LLM (e.g., LLaMA2-Chat / Mistral) using **LoRA adapters**, trained to resist injections and respond safely
+
+**Real-time, modular, and continuously improving.** Ideal for deployment in LLM-based agents, chatbots, or any application involving natural language instructions.
 
 ---
 
-## 🧱 High-Level Architecture
+## 🧠 Core Features
+
+| Feature                         | Description                                                                 |
+|--------------------------------|-----------------------------------------------------------------------------|
+| 🔍 Prompt Injection Detection   | Pre-trained classifier flags malicious input using advanced NLP models     |
+| 🧩 LoRA-based Fine-Tuning       | Efficient training with minimal GPU memory using PEFT & QLoRA              |
+| 🔁 Continuous Learning Loop     | Self-healing feedback pipeline (human-in-the-loop + auto re-training)      |
+| 📈 Benchmark & Evaluation Suite | Attack Success Rate (ASR), Precision/Recall, and real-world jailbreak tests|
+| 🌐 Ready for Deployment         | Docker-ready REST API with FastAPI (or Flask)                              |
+
+---
+
+## 🧱 Architecture
 
 ```mermaid
-graph TD
-    A[User Prompt] --> B[🔍 Prompt Classifier]
-    B -->|Benign| C[🧠 Fine-Tuned LLM (LoRA)]
-    B -->|Malicious| D[❌ Block / Refuse / Sanitize]
-    C --> E[✅ Response to User]
-    D --> E
-    B --> F[🗂️ Logging + Feedback Loop]
-    C --> F
+flowchart TD
+    User[🧑 User Prompt]
+    Classifier[🧠 Prompt Classifier<br>(DistilBERT / DeBERTa)]
+    Decision{Injection Detected?}
+    Blocked[🚫 Refused or Sanitized]
+    SafeLLM[🤖 Fine-Tuned LLM<br>(LoRA Adapter)]
+    Response[📤 Output to User]
+    Feedback[🔁 Feedback & Retraining]
+
+    User --> Classifier --> Decision
+    Decision -- Yes --> Blocked
+    Decision -- No --> SafeLLM --> Response
+    Blocked --> Feedback
+    Response --> Feedback
